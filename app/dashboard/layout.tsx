@@ -14,27 +14,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Home, ArrowDownToLine, ArrowUpFromLine, Ticket, Phone, LogOut, User, Loader2, Bell, Gift } from "lucide-react"
+import { LogOut, User, Loader2, Bell, Gift } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { settingsApi } from "@/lib/api-client"
 
-const baseNavigation = [
-  { name: "Acceuil", href: "/dashboard", icon: Home },
-  // { name: "Dépôt", href: "/dashboard/deposit", icon: ArrowDownToLine },
-  // { name: "Retrait", href: "/dashboard/withdrawal", icon: ArrowUpFromLine },
-  { name: "Coupon", href: "/dashboard/coupon", icon: Ticket },
-  { name: "Mes numéros", href: "/dashboard/phones", icon: Phone },
-  { name: "Notifications", href: "/notifications", icon: Bell },
-]
-
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const pathname = usePathname()
   const { user, isLoading, logout } = useAuth()
   const [referralBonusEnabled, setReferralBonusEnabled] = useState(false)
-  const [isLoadingSettings, setIsLoadingSettings] = useState(true)
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -44,21 +32,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       } catch (error) {
         console.error("Error fetching settings:", error)
         setReferralBonusEnabled(false)
-      } finally {
-        setIsLoadingSettings(false)
       }
     }
     if (user) {
       fetchSettings()
     }
   }, [user])
-
-  const navigation = referralBonusEnabled
-    ? [
-        ...baseNavigation,
-        { name: "Bonus", href: "/dashboard/bonus", icon: Gift },
-      ]
-    : baseNavigation
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -81,112 +60,110 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const userInitials = `${user.first_name?.[0] || ""}${user.last_name?.[0] || ""}`.toUpperCase()
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-3 sm:px-4">
-          {/* Top row with logo and user menu */}
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/90">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
           <div className="flex h-14 sm:h-16 items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/dashboard" className="flex items-center gap-2">
+            {/* Logo */}
+            <div className="flex items-center flex-shrink-0">
+              <Link href="/dashboard" className="flex items-center transition-opacity hover:opacity-90 active:opacity-75">
                 <Image
-                  src="/Turaincash-logo.png"
-                  alt="TurainCash Logo"
+                  src="/Africash-logo.png"
+                  alt="Africash Logo"
                   width={40}
                   height={13}
-                  className="h-auto w-auto max-w-[120px]"
+                  className="h-auto w-auto max-w-[90px] sm:max-w-[110px] md:max-w-[130px]"
                   priority
                 />
               </Link>
             </div>
 
-            {/* Theme toggle and User menu */}
+            {/* Header Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
-              <ThemeToggle />
-              <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full">
-                  <Avatar className="h-9 w-9 sm:h-10 sm:w-10">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-xs sm:text-sm">{userInitials}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {user.first_name} {user.last_name}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile" className="flex items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profil</span>
+              {/* Bonus Button */}
+              {referralBonusEnabled && (
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg hover:bg-muted/80 transition-colors"
+                >
+                  <Link href="/dashboard/bonus" className="flex items-center justify-center">
+                    <Gift className="h-4 w-4 sm:h-[18px] sm:w-[18px] md:h-5 md:w-5" />
                   </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Déconnexion</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                </Button>
+              )}
+              
+              {/* Notifications Button */}
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg hover:bg-muted/80 transition-colors relative"
+              >
+                <Link href="/notifications" className="flex items-center justify-center">
+                  <Bell className="h-4 w-4 sm:h-[18px] sm:w-[18px] md:h-5 md:w-5" />
+                </Link>
+              </Button>
+              
+              {/* Theme Toggle */}
+              <div className="hidden sm:block">
+                <ThemeToggle />
+              </div>
+              
+              {/* User Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg hover:bg-muted/80 transition-colors p-0"
+                  >
+                    <Avatar className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 ring-1 ring-border/50">
+                      <AvatarFallback className="bg-gradient-to-br from-primary/90 to-primary text-primary-foreground text-[10px] sm:text-xs font-semibold">
+                        {userInitials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 sm:w-64 shadow-lg border-border/50" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal px-3 py-2.5">
+                    <div className="flex flex-col space-y-0.5">
+                      <p className="text-sm font-semibold leading-tight text-foreground">
+                        {user.first_name} {user.last_name}
+                      </p>
+                      <p className="text-xs leading-tight text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="my-1" />
+                  <DropdownMenuItem asChild className="cursor-pointer px-3 py-2">
+                    <Link href="/dashboard/profile" className="flex items-center w-full">
+                      <User className="mr-2 h-4 w-4" />
+                      <span className="text-sm">Profil</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="my-1" />
+                  <DropdownMenuItem 
+                    onClick={logout} 
+                    className="text-destructive focus:text-destructive cursor-pointer px-3 py-2"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span className="text-sm">Déconnexion</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
               </DropdownMenu>
+              
+              {/* Mobile Theme Toggle */}
+              <div className="sm:hidden">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 pb-4">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
-                </Link>
-              )
-            })}
-          </nav>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-20 lg:pb-6">{children}</main>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden safe-area-inset-bottom">
-        <div className="flex items-center justify-around h-16 px-1">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 flex-1 h-full px-1 py-1.5 min-w-0 transition-colors active:bg-muted/50 rounded-lg",
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground",
-                )}
-              >
-                <item.icon className={cn("h-5 w-5 flex-shrink-0", isActive && "text-primary")} />
-                <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center leading-tight">{item.name}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </nav>
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">{children}</main>
     </div>
   )
 }

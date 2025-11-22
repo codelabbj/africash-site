@@ -111,55 +111,55 @@ export default function SignupPage() {
   }
 
   return (
-    <Card className="border-border/50 shadow-xl">
-      <CardHeader className="space-y-1 px-4 sm:px-6 pt-6 sm:pt-6">
-        <CardTitle className="text-xl sm:text-2xl font-bold text-center">Créer un compte</CardTitle>
+    <Card className="border-border/50 shadow-xl overflow-hidden">
+      <CardHeader className="space-y-2 px-6 sm:px-8 pt-8 sm:pt-10 pb-6 bg-gradient-to-br from-primary/5 to-primary/10">
+        <CardTitle className="text-2xl sm:text-3xl font-bold text-center">Créer un compte</CardTitle>
         <CardDescription className="text-center text-sm sm:text-base">Remplissez le formulaire pour créer votre compte</CardDescription>
       </CardHeader>
-      <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <CardContent className="px-6 sm:px-8 pb-6 sm:pb-8 pt-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <div className="space-y-2">
-              <Label htmlFor="first_name" className="text-sm sm:text-base">Prénom</Label>
-              <Input id="first_name" type="text" placeholder="Jean" {...register("first_name")} disabled={isLoading} className="h-11 sm:h-10 text-base sm:text-sm" />
-              {errors.first_name && <p className="text-xs sm:text-sm text-destructive">{errors.first_name.message}</p>}
+              <Label htmlFor="first_name" className="text-sm font-semibold">Prénom</Label>
+              <Input id="first_name" type="text" placeholder="Jean" {...register("first_name")} disabled={isLoading} className="h-12 text-base border-2 focus:border-primary transition-colors" />
+              {errors.first_name && <p className="text-xs text-destructive mt-1">{errors.first_name.message}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="last_name" className="text-sm sm:text-base">Nom</Label>
-              <Input id="last_name" type="text" placeholder="Dupont" {...register("last_name")} disabled={isLoading} className="h-11 sm:h-10 text-base sm:text-sm" />
-              {errors.last_name && <p className="text-xs sm:text-sm text-destructive">{errors.last_name.message}</p>}
+              <Label htmlFor="last_name" className="text-sm font-semibold">Nom</Label>
+              <Input id="last_name" type="text" placeholder="Dupont" {...register("last_name")} disabled={isLoading} className="h-12 text-base border-2 focus:border-primary transition-colors" />
+              {errors.last_name && <p className="text-xs text-destructive mt-1">{errors.last_name.message}</p>}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
+            <Label htmlFor="email" className="text-sm font-semibold">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="exemple@email.com"
               {...register("email")}
               disabled={isLoading}
-              className="h-11 sm:h-10 text-base sm:text-sm"
+              className="h-12 text-base border-2 focus:border-primary transition-colors"
             />
-            {errors.email && <p className="text-xs sm:text-sm text-destructive">{errors.email.message}</p>}
+            {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone" className="text-sm sm:text-base">Téléphone</Label>
+            <Label htmlFor="phone" className="text-sm font-semibold">Téléphone</Label>
             <Input
               id="phone"
               type="tel"
               placeholder="+225 01 02 03 04 05"
               {...register("phone")}
               disabled={isLoading}
-              className="h-11 sm:h-10 text-base sm:text-sm"
+              className="h-12 text-base border-2 focus:border-primary transition-colors"
             />
-            {errors.phone && <p className="text-xs sm:text-sm text-destructive">{errors.phone.message}</p>}
+            {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm sm:text-base">Mot de passe</Label>
+            <Label htmlFor="password" className="text-sm font-semibold">Mot de passe</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -167,28 +167,28 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 {...register("password")}
                 disabled={isLoading}
-                className="h-11 sm:h-10 text-base sm:text-sm pr-10"
+                className="h-12 text-base border-2 focus:border-primary transition-colors pr-12"
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent"
+                className="absolute right-0 top-0 h-12 w-12 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isLoading}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  <EyeOff className="h-5 w-5 text-muted-foreground" />
                 ) : (
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <Eye className="h-5 w-5 text-muted-foreground" />
                 )}
               </Button>
             </div>
-            {errors.password && <p className="text-xs sm:text-sm text-destructive">{errors.password.message}</p>}
+            {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="re_password" className="text-sm sm:text-base">Confirmer le mot de passe</Label>
+            <Label htmlFor="re_password" className="text-sm font-semibold">Confirmer le mot de passe</Label>
             <div className="relative">
               <Input
                 id="re_password"
@@ -196,45 +196,45 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 {...register("re_password")}
                 disabled={isLoading}
-                className="h-11 sm:h-10 text-base sm:text-sm pr-10"
+                className="h-12 text-base border-2 focus:border-primary transition-colors pr-12"
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent"
+                className="absolute right-0 top-0 h-12 w-12 hover:bg-transparent"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 disabled={isLoading}
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  <EyeOff className="h-5 w-5 text-muted-foreground" />
                 ) : (
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <Eye className="h-5 w-5 text-muted-foreground" />
                 )}
               </Button>
             </div>
-            {errors.re_password && <p className="text-xs sm:text-sm text-destructive">{errors.re_password.message}</p>}
+            {errors.re_password && <p className="text-xs text-destructive mt-1">{errors.re_password.message}</p>}
           </div>
 
           {referralBonusEnabled && (
             <div className="space-y-2">
-              <Label htmlFor="referral_code" className="text-sm sm:text-base">Code de parrainage (optionnel)</Label>
+              <Label htmlFor="referral_code" className="text-sm font-semibold">Code de parrainage (optionnel)</Label>
               <Input
                 id="referral_code"
                 type="text"
                 placeholder="Entrez un code de parrainage"
                 {...register("referral_code")}
                 disabled={isLoading}
-                className="h-11 sm:h-10 text-base sm:text-sm"
+                className="h-12 text-base border-2 focus:border-primary transition-colors"
               />
-              {errors.referral_code && <p className="text-xs sm:text-sm text-destructive">{errors.referral_code.message}</p>}
+              {errors.referral_code && <p className="text-xs text-destructive mt-1">{errors.referral_code.message}</p>}
             </div>
           )}
 
-          <Button type="submit" className="w-full h-11 sm:h-10 text-base sm:text-sm font-medium" disabled={isLoading}>
+          <Button type="submit" className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Création en cours...
               </>
             ) : (
@@ -243,10 +243,10 @@ export default function SignupPage() {
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2 px-4 sm:px-6 pb-6 sm:pb-6">
-        <div className="text-xs sm:text-sm text-muted-foreground text-center">
+      <CardFooter className="flex flex-col space-y-3 px-6 sm:px-8 pb-8">
+        <div className="text-sm text-muted-foreground text-center">
           Vous avez déjà un compte?{" "}
-          <Link href="/login" className="text-primary hover:underline font-medium">
+          <Link href="/login" className="text-primary hover:underline font-semibold">
             Se connecter
           </Link>
         </div>

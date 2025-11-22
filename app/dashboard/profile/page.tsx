@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, User, Save, Eye, EyeOff, Lock } from "lucide-react"
+import { Loader2, User, Save, Eye, EyeOff, Lock, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 import { authApi } from "@/lib/api-client"
 import type { User } from "@/lib/types"
 import { toast } from "react-hot-toast"
@@ -152,31 +153,48 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
-          <User className="h-6 w-6 sm:h-8 sm:w-8" />
-          Mon profil
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
-          Gérez vos informations personnelles
-        </p>
-      </div>
+    <div className="max-w-4xl mx-auto w-full px-3 sm:px-4 lg:px-6 pb-4 sm:pb-6">
+      <div className="space-y-3 sm:space-y-4 lg:space-y-5">
+        {/* Header */}
+        <div className="pb-2 sm:pb-3 border-b border-border/50">
+          <div className="flex items-start sm:items-center gap-2 sm:gap-3 mb-2">
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0"
+            >
+              <Link href="/dashboard">
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+              <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 flex-shrink-0">
+                <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight truncate">Mon profil</h1>
+                <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
+                  Gérez vos informations personnelles
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
       {/* Profile Information Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base sm:text-lg">Informations personnelles</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
+      <Card className="border-border/50">
+        <CardHeader className="p-3 sm:p-4 md:p-5 pb-2 sm:pb-3 border-b border-border/50">
+          <CardTitle className="text-sm sm:text-base md:text-lg font-semibold">Informations personnelles</CardTitle>
+          <CardDescription className="text-[11px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">
             Modifiez vos informations de profil
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
+        <CardContent className="p-3 sm:p-4 md:p-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="first_name" className="text-sm sm:text-base">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="first_name" className="text-[11px] sm:text-xs md:text-sm font-medium">
                   Prénom
                 </Label>
                 <Input
@@ -185,17 +203,17 @@ export default function ProfilePage() {
                   placeholder="Votre prénom"
                   {...register("first_name")}
                   disabled={isSubmitting}
-                  className="h-11 sm:h-10 text-base sm:text-sm"
+                  className="h-11 sm:h-10 text-sm touch-manipulation"
                 />
                 {errors.first_name && (
-                  <p className="text-xs sm:text-sm text-destructive">
+                  <p className="text-[10px] sm:text-xs text-destructive mt-0.5">
                     {errors.first_name.message}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="last_name" className="text-sm sm:text-base">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="last_name" className="text-[11px] sm:text-xs md:text-sm font-medium">
                   Nom
                 </Label>
                 <Input
@@ -204,61 +222,62 @@ export default function ProfilePage() {
                   placeholder="Votre nom"
                   {...register("last_name")}
                   disabled={isSubmitting}
-                  className="h-11 sm:h-10 text-base sm:text-sm"
+                  className="h-11 sm:h-10 text-sm touch-manipulation"
                 />
                 {errors.last_name && (
-                  <p className="text-xs sm:text-sm text-destructive">
+                  <p className="text-[10px] sm:text-xs text-destructive mt-0.5">
                     {errors.last_name.message}
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="email" className="text-[11px] sm:text-xs md:text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="votre@email.com"
                 {...register("email")}
                 disabled={isSubmitting}
-                className="h-11 sm:h-10 text-base sm:text-sm"
+                className="h-11 sm:h-10 text-sm touch-manipulation"
               />
               {errors.email && (
-                <p className="text-xs sm:text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-[10px] sm:text-xs text-destructive mt-0.5">{errors.email.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm sm:text-base">Téléphone</Label>
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="phone" className="text-[11px] sm:text-xs md:text-sm font-medium">Téléphone</Label>
               <Input
                 id="phone"
                 type="tel"
                 placeholder="+225 01 02 03 04 05"
                 {...register("phone")}
                 disabled={isSubmitting}
-                className="h-11 sm:h-10 text-base sm:text-sm"
+                className="h-11 sm:h-10 text-sm touch-manipulation"
               />
               {errors.phone && (
-                <p className="text-xs sm:text-sm text-destructive">{errors.phone.message}</p>
+                <p className="text-[10px] sm:text-xs text-destructive mt-0.5">{errors.phone.message}</p>
               )}
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 sm:pt-3">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => router.push("/dashboard")}
                 disabled={isSubmitting}
-                className="flex-1 sm:flex-initial h-11 sm:h-10 text-sm"
+                className="w-full sm:flex-initial h-11 sm:h-10 text-sm border-border/50 touch-manipulation"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="flex-1 sm:flex-initial h-11 sm:h-10 text-sm">
+              <Button type="submit" disabled={isSubmitting} className="w-full sm:flex-1 h-11 sm:h-10 text-sm touch-manipulation">
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enregistrement...
+                    <span className="hidden sm:inline">Enregistrement...</span>
+                    <span className="sm:hidden">Enregistrement</span>
                   </>
                 ) : (
                   <>
@@ -273,20 +292,20 @@ export default function ProfilePage() {
       </Card>
 
       {/* Change Password Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
-            Changer le mot de passe
+      <Card className="border-border/50">
+        <CardHeader className="p-3 sm:p-4 md:p-5 pb-2 sm:pb-3 border-b border-border/50">
+          <CardTitle className="text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2">
+            <Lock className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+            <span className="truncate">Changer le mot de passe</span>
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
+          <CardDescription className="text-[11px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">
             Modifiez votre mot de passe pour sécuriser votre compte
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmitPassword(onPasswordSubmit)} className="space-y-4 sm:space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="old_password" className="text-sm sm:text-base">
+        <CardContent className="p-3 sm:p-4 md:p-5">
+          <form onSubmit={handleSubmitPassword(onPasswordSubmit)} className="space-y-3 sm:space-y-4">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="old_password" className="text-[11px] sm:text-xs md:text-sm font-medium">
                 Ancien mot de passe
               </Label>
               <div className="relative">
@@ -296,13 +315,13 @@ export default function ProfilePage() {
                   placeholder="••••••••"
                   {...registerPassword("old_password")}
                   disabled={isChangingPassword}
-                  className="h-11 sm:h-10 text-base sm:text-sm pr-10"
+                  className="h-11 sm:h-10 text-sm pr-10 touch-manipulation"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent touch-manipulation"
                   onClick={() => setShowOldPassword(!showOldPassword)}
                   disabled={isChangingPassword}
                 >
@@ -314,14 +333,14 @@ export default function ProfilePage() {
                 </Button>
               </div>
               {passwordErrors.old_password && (
-                <p className="text-xs sm:text-sm text-destructive">
+                <p className="text-[10px] sm:text-xs text-destructive mt-0.5">
                   {passwordErrors.old_password.message}
                 </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="new_password" className="text-sm sm:text-base">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="new_password" className="text-[11px] sm:text-xs md:text-sm font-medium">
                 Nouveau mot de passe
               </Label>
               <div className="relative">
@@ -331,13 +350,13 @@ export default function ProfilePage() {
                   placeholder="••••••••"
                   {...registerPassword("new_password")}
                   disabled={isChangingPassword}
-                  className="h-11 sm:h-10 text-base sm:text-sm pr-10"
+                  className="h-11 sm:h-10 text-sm pr-10 touch-manipulation"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent touch-manipulation"
                   onClick={() => setShowNewPassword(!showNewPassword)}
                   disabled={isChangingPassword}
                 >
@@ -349,14 +368,14 @@ export default function ProfilePage() {
                 </Button>
               </div>
               {passwordErrors.new_password && (
-                <p className="text-xs sm:text-sm text-destructive">
+                <p className="text-[10px] sm:text-xs text-destructive mt-0.5">
                   {passwordErrors.new_password.message}
                 </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirm_new_password" className="text-sm sm:text-base">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="confirm_new_password" className="text-[11px] sm:text-xs md:text-sm font-medium">
                 Confirmer le nouveau mot de passe
               </Label>
               <div className="relative">
@@ -366,13 +385,13 @@ export default function ProfilePage() {
                   placeholder="••••••••"
                   {...registerPassword("confirm_new_password")}
                   disabled={isChangingPassword}
-                  className="h-11 sm:h-10 text-base sm:text-sm pr-10"
+                  className="h-11 sm:h-10 text-sm pr-10 touch-manipulation"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-11 sm:h-10 w-10 hover:bg-transparent touch-manipulation"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   disabled={isChangingPassword}
                 >
@@ -384,13 +403,13 @@ export default function ProfilePage() {
                 </Button>
               </div>
               {passwordErrors.confirm_new_password && (
-                <p className="text-xs sm:text-sm text-destructive">
+                <p className="text-[10px] sm:text-xs text-destructive mt-0.5">
                   {passwordErrors.confirm_new_password.message}
                 </p>
               )}
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 sm:pt-3">
               <Button
                 type="button"
                 variant="outline"
@@ -401,24 +420,26 @@ export default function ProfilePage() {
                   setShowConfirmPassword(false)
                 }}
                 disabled={isChangingPassword}
-                className="flex-1 sm:flex-initial h-11 sm:h-10 text-sm"
+                className="w-full sm:flex-initial h-11 sm:h-10 text-sm border-border/50 touch-manipulation"
               >
                 Annuler
               </Button>
               <Button
                 type="submit"
                 disabled={isChangingPassword}
-                className="flex-1 sm:flex-initial h-11 sm:h-10 text-sm"
+                className="w-full sm:flex-1 h-11 sm:h-10 text-sm touch-manipulation"
               >
                 {isChangingPassword ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Modification...
+                    <span className="hidden sm:inline">Modification...</span>
+                    <span className="sm:hidden">Modification</span>
                   </>
                 ) : (
                   <>
                     <Lock className="mr-2 h-4 w-4" />
-                    Modifier le mot de passe
+                    <span className="hidden sm:inline">Modifier le mot de passe</span>
+                    <span className="sm:hidden">Modifier</span>
                   </>
                 )}
               </Button>
@@ -429,51 +450,46 @@ export default function ProfilePage() {
 
       {/* Account Information Card */}
       {profile && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg">Informations du compte</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
+        <Card className="border-border/50">
+          <CardHeader className="p-3 sm:p-4 md:p-5 pb-2 sm:pb-3 border-b border-border/50">
+            <CardTitle className="text-sm sm:text-base md:text-lg font-semibold">Informations du compte</CardTitle>
+            <CardDescription className="text-[11px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">
               Informations en lecture seule
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-xs sm:text-sm text-muted-foreground">Nom d'utilisateur</Label>
-                <p className="text-sm sm:text-base font-medium mt-1">{profile.username}</p>
+          <CardContent className="p-3 sm:p-4 md:p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="py-1.5 sm:py-2">
+                <Label className="text-[11px] sm:text-xs md:text-sm text-muted-foreground">Nom d'utilisateur</Label>
+                <p className="text-sm sm:text-base font-medium mt-1 text-foreground break-words">{profile.username}</p>
               </div>
-              <div>
-                <Label className="text-xs sm:text-sm text-muted-foreground">ID utilisateur</Label>
-                <p className="text-sm sm:text-base font-medium mt-1 font-mono text-xs">
-                  {profile.id}
-                </p>
-              </div>
-              <div>
-                <Label className="text-xs sm:text-sm text-muted-foreground">Date d'inscription</Label>
-                <p className="text-sm sm:text-base font-medium mt-1">
+              
+              <div className="py-1.5 sm:py-2">
+                <Label className="text-[11px] sm:text-xs md:text-sm text-muted-foreground">Date d'inscription</Label>
+                <p className="text-sm sm:text-base font-medium mt-1 text-foreground break-words">
                   {format(new Date(profile.date_joined), "dd MMMM yyyy", { locale: fr })}
                 </p>
               </div>
-              <div>
-                <Label className="text-xs sm:text-sm text-muted-foreground">Dernière connexion</Label>
-                <p className="text-sm sm:text-base font-medium mt-1">
+              <div className="py-1.5 sm:py-2">
+                <Label className="text-[11px] sm:text-xs md:text-sm text-muted-foreground">Dernière connexion</Label>
+                <p className="text-sm sm:text-base font-medium mt-1 text-foreground break-words">
                   {profile.last_login
                     ? format(new Date(profile.last_login), "dd MMMM yyyy à HH:mm", { locale: fr })
                     : "Jamais"}
                 </p>
               </div>
               {profile.referral_code && (
-                <div>
-                  <Label className="text-xs sm:text-sm text-muted-foreground">Code de parrainage</Label>
-                  <p className="text-sm sm:text-base font-medium mt-1 font-mono">
+                <div className="py-1.5 sm:py-2 sm:col-span-2">
+                  <Label className="text-[11px] sm:text-xs md:text-sm text-muted-foreground">Code de parrainage</Label>
+                  <p className="text-sm sm:text-base font-medium mt-1 font-mono text-foreground break-all">
                     {profile.referral_code}
                   </p>
                 </div>
               )}
               {profile.bonus_available !== undefined && (
-                <div>
-                  <Label className="text-xs sm:text-sm text-muted-foreground">Bonus disponible</Label>
-                  <p className="text-sm sm:text-base font-medium mt-1">
+                <div className="py-1.5 sm:py-2 sm:col-span-2">
+                  <Label className="text-[11px] sm:text-xs md:text-sm text-muted-foreground">Bonus disponible</Label>
+                  <p className="text-sm sm:text-base font-medium mt-1 text-foreground">
                     {profile.bonus_available.toLocaleString("fr-FR", {
                       style: "currency",
                       currency: "XOF",
@@ -486,6 +502,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       )}
+      </div>
     </div>
   )
 }

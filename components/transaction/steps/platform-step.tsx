@@ -48,40 +48,40 @@ export function PlatformStep({ selectedPlatform, onSelect, onNext }: PlatformSte
   }
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="p-4 sm:p-6">
-        <CardTitle className="text-lg sm:text-xl">Choisir une plateforme</CardTitle>
+    <Card className="border-border/50 overflow-hidden">
+      <CardHeader className="p-4 sm:p-5 pb-3 border-b border-border/50">
+        <CardTitle className="text-base sm:text-lg font-semibold">Choisir une plateforme</CardTitle>
+        <CardDescription className="text-xs sm:text-sm mt-1">Sélectionnez la plateforme de paris</CardDescription>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0">
-        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <CardContent className="p-4 sm:p-5">
+        <div className="grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {platforms.map((platform) => (
             <Card
               key={platform.id}
-              className={`cursor-pointer transition-all hover:shadow-md overflow-hidden ${
+              className={`group cursor-pointer transition-all duration-200 border-2 overflow-hidden ${
                 selectedPlatform?.id === platform.id
-                  ? "ring-2 ring-deposit bg-green-500/10"
-                  : "hover:bg-muted/50"
+                  ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-md shadow-emerald-500/10"
+                  : "border-border/50 hover:border-border hover:shadow-sm bg-card"
               }`}
               onClick={() => {
                 onSelect(platform)
-                // Auto-advance to next step after a short delay
                 setTimeout(() => {
                   onNext()
                 }, 300)
               }}
             >
               <CardContent className="p-3 sm:p-4">
-                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="flex items-start gap-3 min-w-0">
                   <SafeImage
                     src={platform.image}
                     alt={platform.name}
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover flex-shrink-0"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl object-cover flex-shrink-0 ring-1 ring-border/50"
                     fallbackText={platform.name.charAt(0).toUpperCase()}
                   />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm sm:text-base truncate">{platform.name}</h3>
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{platform.name}</h3>
                     {(platform.city || platform.street) && (
-                      <div className="text-xs text-muted-foreground mt-0.5 space-y-0.5">
+                      <div className="text-[11px] sm:text-xs text-muted-foreground space-y-0.5">
                         {platform.city && (
                           <p className="truncate">
                             <span className="font-medium">Ville:</span> {platform.city}
@@ -94,11 +94,11 @@ export function PlatformStep({ selectedPlatform, onSelect, onNext }: PlatformSte
                         )}
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1">
-                      <Badge variant="outline" className="text-[10px] sm:text-xs whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <Badge variant="secondary" className="text-[10px] sm:text-xs font-medium">
                         Min: {platform.minimun_deposit.toLocaleString()} FCFA
                       </Badge>
-                      <Badge variant="outline" className="text-[10px] sm:text-xs whitespace-nowrap">
+                      <Badge variant="secondary" className="text-[10px] sm:text-xs font-medium">
                         Max: {platform.max_deposit.toLocaleString()} FCFA
                       </Badge>
                     </div>
@@ -110,7 +110,7 @@ export function PlatformStep({ selectedPlatform, onSelect, onNext }: PlatformSte
         </div>
         
         {platforms.length === 0 && (
-          <div className="text-center py-8">
+          <div className="text-center py-12">
             <p className="text-sm text-muted-foreground">Aucune plateforme disponible</p>
           </div>
         )}

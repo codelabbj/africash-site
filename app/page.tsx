@@ -23,8 +23,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6">
       <Image
-        src="/Turaincash-logo.png"
-        alt="TurainCash Logo"
+        src="/Africash-logo.png"
+        alt="Africash Logo"
         width={50}
         height={16}
         className="h-auto w-auto max-w-[150px]"

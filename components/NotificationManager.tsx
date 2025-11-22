@@ -277,7 +277,7 @@ export const NotificationManager: React.FC<NotificationManagerProps> = ({
   const getPermissionIcon = () => {
     switch (state.permission) {
       case 'granted':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-purple-500" />;
       case 'denied':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
@@ -344,7 +344,7 @@ export const NotificationManager: React.FC<NotificationManagerProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {state.isEnabled ? (
-              <Bell className="h-4 w-4 text-green-500" />
+              <Bell className="h-4 w-4 text-purple-500" />
             ) : (
               <BellOff className="h-4 w-4 text-gray-400" />
             )}

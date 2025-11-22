@@ -209,42 +209,41 @@ export function PhoneStep({ selectedNetwork, selectedPhone, onSelect, onNext }: 
 
   return (
     <>
-      <Card className="overflow-hidden">
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg sm:text-xl">Choisir un numéro de téléphone</CardTitle>
+      <Card className="border-border/50 overflow-hidden">
+        <CardHeader className="p-4 sm:p-5 pb-3 border-b border-border/50">
+          <CardTitle className="text-base sm:text-lg font-semibold">Choisir un numéro de téléphone</CardTitle>
+          <CardDescription className="text-xs sm:text-sm mt-1">Sélectionnez ou ajoutez un numéro</CardDescription>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 sm:p-5">
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin" />
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-2.5 sm:space-y-3">
               {phones.map((phone) => (
                 <Card
                   key={phone.id}
-                  className={`cursor-pointer transition-all hover:shadow-md overflow-hidden ${
+                  className={`group cursor-pointer transition-all duration-200 border-2 overflow-hidden ${
                     selectedPhone?.id === phone.id
-                      ? "ring-2 ring-deposit bg-green-500/10"
-                      : "hover:bg-muted/50"
+                      ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-md shadow-emerald-500/10"
+                      : "border-border/50 hover:border-border hover:shadow-sm bg-card"
                   }`}
                   onClick={() => {
                     onSelect(phone)
-                    // Auto-advance to next step after a short delay
                     setTimeout(() => {
                       onNext()
                     }, 300)
                   }}
                 >
                   <CardContent className="p-3 sm:p-4">
-                    <div className="flex items-center justify-between gap-2 min-w-0">
+                    <div className="flex items-center justify-between gap-3 min-w-0">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm sm:text-base break-all">{formatPhoneNumberForDisplay(phone.phone)}</h3>
-                        {/* <p className="text-xs sm:text-sm text-muted-foreground">
-                          Ajouté le {new Date(phone.created_at).toLocaleDateString("fr-FR")}
-                        </p> */}
+                        <h3 className="font-semibold text-sm sm:text-base text-foreground break-all font-mono">
+                          {formatPhoneNumberForDisplay(phone.phone)}
+                        </h3>
                       </div>
-                      <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+                      <div className="flex gap-1 flex-shrink-0">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -252,9 +251,9 @@ export function PhoneStep({ selectedNetwork, selectedPhone, onSelect, onNext }: 
                             e.stopPropagation()
                             openEditDialog(phone)
                           }}
-                          className="h-9 w-9 sm:h-10 sm:w-10 p-0"
+                          className="h-8 w-8 sm:h-9 sm:w-9 p-0 hover:bg-muted"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -263,9 +262,9 @@ export function PhoneStep({ selectedNetwork, selectedPhone, onSelect, onNext }: 
                             e.stopPropagation()
                             handleDeletePhone(phone)
                           }}
-                          className="h-9 w-9 sm:h-10 sm:w-10 p-0"
+                          className="h-8 w-8 sm:h-9 sm:w-9 p-0 hover:bg-destructive/10 hover:text-destructive"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </div>
@@ -274,11 +273,11 @@ export function PhoneStep({ selectedNetwork, selectedPhone, onSelect, onNext }: 
               ))}
               
               {phones.length === 0 && (
-                <div className="text-center py-8">
+                <div className="text-center py-12">
                   <p className="text-sm text-muted-foreground mb-4">Aucun numéro de téléphone trouvé</p>
                   <Button
                     onClick={openAddDialog}
-                    className="h-11 sm:h-10 text-sm sm:text-base"
+                    className="h-10 text-sm"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Ajouter un numéro
@@ -290,7 +289,7 @@ export function PhoneStep({ selectedNetwork, selectedPhone, onSelect, onNext }: 
                 <Button 
                   variant="outline" 
                   onClick={openAddDialog}
-                  className="w-full h-11 sm:h-10 text-sm sm:text-base"
+                  className="w-full h-10 text-sm border-border/50"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Ajouter un autre numéro

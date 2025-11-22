@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Gift } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Loader2, Gift, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 import { bonusApi, settingsApi } from "@/lib/api-client"
 import type { Bonus } from "@/lib/types"
 import { toast } from "react-hot-toast"
@@ -86,64 +88,83 @@ export default function BonusPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Gift className="h-6 w-6 sm:h-8 sm:w-8" />
-          Mes bonus
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">Consultez vos bonus de parrainage</p>
-      </div>
+    <div className="max-w-6xl mx-auto w-full px-3 sm:px-4 lg:px-6">
+      <div className="space-y-4 sm:space-y-5 lg:space-y-6">
+        {/* Header */}
+        <div className="pb-2 border-b border-border/50">
+          <div className="flex items-center gap-3 mb-2">
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-9"
+            >
+              <Link href="/dashboard">
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <div className="flex items-center gap-2 sm:gap-3 flex-1">
+              <Gift className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+              <div className="flex-1">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">Mes bonus</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Consultez vos bonus de parrainage</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base sm:text-lg">Historique des bonus</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Liste de tous vos bonus reçus</CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : bonuses.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Gift className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Aucun bonus enregistré</p>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Vos bonus de parrainage apparaîtront ici</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {bonuses.map((bonus) => (
-                <Card key={bonus.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="default" className="text-xs sm:text-sm">
-                            {parseFloat(bonus.amount).toLocaleString("fr-FR", {
-                              style: "currency",
-                              currency: "XOF",
-                              minimumFractionDigits: 0,
+        <Card className="border-border/50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base sm:text-lg font-semibold">Historique des bonus</CardTitle>
+            <CardDescription className="text-xs sm:text-sm mt-1">Liste de tous vos bonus reçus</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-5 lg:p-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-16 sm:py-20">
+                <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+              </div>
+            ) : bonuses.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center">
+                <div className="p-3 rounded-full bg-muted/50 mb-4">
+                  <Gift className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+                </div>
+                <p className="text-sm sm:text-base font-medium text-foreground/70">Aucun bonus enregistré</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1.5">Vos bonus de parrainage apparaîtront ici</p>
+              </div>
+            ) : (
+              <div className="space-y-2.5 sm:space-y-3">
+                {bonuses.map((bonus) => (
+                  <Card key={bonus.id} className="border-border/50 hover:border-primary/30 transition-all duration-200 hover:shadow-md">
+                    <CardContent className="p-4 sm:p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex-1 min-w-0 space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="default" className="text-xs sm:text-sm font-semibold">
+                              {parseFloat(bonus.amount).toLocaleString("fr-FR", {
+                                style: "currency",
+                                currency: "XOF",
+                                minimumFractionDigits: 0,
+                              })}
+                            </Badge>
+                          </div>
+                          <p className="text-sm sm:text-base font-medium text-foreground">
+                            {bonus.reason_bonus || "Bonus de parrainage"}
+                          </p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
+                            {format(new Date(bonus.created_at), "dd MMMM yyyy à HH:mm", {
+                              locale: fr,
                             })}
-                          </Badge>
+                          </p>
                         </div>
-                        <p className="text-sm sm:text-base font-medium text-foreground mb-1">
-                          {bonus.reason_bonus || "Bonus de parrainage"}
-                        </p>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {format(new Date(bonus.created_at), "dd MMMM yyyy à HH:mm", {
-                            locale: fr,
-                          })}
-                        </p>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

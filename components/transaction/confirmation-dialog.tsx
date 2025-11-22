@@ -71,7 +71,7 @@ export function ConfirmationDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-600" />
+            <CheckCircle className="h-5 w-5 text-purple-600" />
             Confirmer {type === "deposit" ? "le dépôt" : "le retrait"}
           </DialogTitle>
           <DialogDescription>

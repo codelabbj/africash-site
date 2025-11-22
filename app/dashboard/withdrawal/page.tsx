@@ -15,7 +15,8 @@ import type { Platform, UserAppId, Network, UserPhone } from "@/lib/types"
 import { toast } from "react-hot-toast"
 import { extractTimeErrorMessage } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 export default function WithdrawalPage() {
   const router = useRouter()
@@ -169,12 +170,27 @@ export default function WithdrawalPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-3 sm:px-4">
-      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+    <div className="max-w-4xl mx-auto w-full px-3 sm:px-4 lg:px-6">
+      <div className="space-y-4 sm:space-y-5 lg:space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Effectuer un retrait</h1>
-      </div>
+        <div className="pb-2 border-b border-border/50">
+          <div className="flex items-center gap-3 mb-2">
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-9"
+            >
+              <Link href="/dashboard">
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <div className="flex-1">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">Effectuer un retrait</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Remplissez les informations pour effectuer votre retrait</p>
+            </div>
+          </div>
+        </div>
 
         {/* Progress Bar */}
         <TransactionProgressBar 
@@ -184,20 +200,20 @@ export default function WithdrawalPage() {
         />
 
         {/* Current Step */}
-        <div className="min-h-[250px] sm:min-h-[300px] lg:min-h-[400px] overflow-x-hidden">
+        <div className="min-h-[280px] sm:min-h-[320px] lg:min-h-[400px] overflow-x-hidden">
           {renderCurrentStep()}
-              </div>
+        </div>
 
         {/* Navigation - Show Previous button for steps 2-5 */}
         {currentStep > 1 && currentStep <= 5 && (
-          <div className="flex justify-start pt-4 sm:pt-6">
+          <div className="flex justify-start pt-2 sm:pt-3">
             <Button
               variant="outline"
               onClick={handlePrevious}
-              className="flex items-center gap-2 w-full sm:w-auto h-11 sm:h-10"
+              className="flex items-center gap-2 h-9 sm:h-10 text-sm"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span className="text-sm sm:text-base">Précédent</span>
+              <span>Précédent</span>
             </Button>
           </div>
         )}

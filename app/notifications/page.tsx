@@ -304,14 +304,14 @@ export default function NotificationsPage() {
                     key={notification.id}
                     className={`transition-all hover:shadow-md ${
                       !notification.is_read ? 'border-primary/50' : ''
-                    } ${isFCM ? 'border-blue-500/30' : ''}`}
+                    } ${isFCM ? 'border-purple-500/30' : ''}`}
                   >
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-2">
                           <div className="flex items-center gap-2">
                             {isFCM && (
-                              <MessageSquare className="h-4 w-4 text-blue-500" />
+                              <MessageSquare className="h-4 w-4 text-purple-500" />
                             )}
                             <h3 className="font-semibold text-lg">
                               {notification.title}

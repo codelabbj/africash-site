@@ -53,7 +53,7 @@ export function NotificationPermissionDialog({
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <div className="flex items-start gap-3">
-              <Bell className="h-5 w-5 text-green-500 mt-0.5" />
+              <Bell className="h-5 w-5 text-purple-500 mt-0.5" />
               <div>
                 <h4 className="font-medium text-sm">Notifications transactionnelles</h4>
                 <p className="text-sm text-muted-foreground">
@@ -64,7 +64,7 @@ export function NotificationPermissionDialog({
           </div>
 
           <div className="flex items-start gap-3">
-            <Smartphone className="h-5 w-5 text-blue-500 mt-0.5" />
+            <Smartphone className="h-5 w-5 text-purple-500 mt-0.5" />
             <div>
               <h4 className="font-medium text-sm">Multi-appareil</h4>
               <p className="text-sm text-muted-foreground">

@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ArrowDownToLine, ArrowUpFromLine, Wallet, Loader2, ArrowRight, RefreshCw, MessageSquare, Send, Smartphone, Download } from "lucide-react"
+import { ArrowDownToLine, ArrowUpFromLine, Wallet, Loader2, ArrowRight, RefreshCw, MessageSquare, Send, Download, Ticket, Headphones } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { transactionApi, advertisementApi } from "@/lib/api-client"
@@ -36,6 +36,23 @@ export default function DashboardPage() {
   const [isChatPopoverOpen, setIsChatPopoverOpen] = useState(false)
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [isCarouselPaused, setIsCarouselPaused] = useState(false)
+
+  // Prevent browser back button from going to login
+  useEffect(() => {
+    // Replace current history entry to prevent going back
+    window.history.replaceState(null, "", window.location.href)
+    
+    const handlePopState = (event: PopStateEvent) => {
+      // Push current state again to prevent navigation
+      window.history.pushState(null, "", window.location.href)
+    }
+
+    window.addEventListener("popstate", handlePopState)
+    
+    return () => {
+      window.removeEventListener("popstate", handlePopState)
+    }
+  }, [])
 
   const fetchRecentTransactions = async () => {
     try {
@@ -142,106 +159,63 @@ export default function DashboardPage() {
 
   return (
     <>
-    <div className="space-y-6 sm:space-y-8">
-      {/* Welcome section */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Bienvenue, {user?.first_name} {user?.last_name}
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">Gérez vos dépôts et retraits en toute simplicité</p>
-      </div>
-
-      {/* Mobile App Download */}
-      <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-        <CardContent className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/20">
-                <Smartphone className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-base sm:text-lg">Téléchargez l'application mobile</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                  Accédez à vos services depuis votre téléphone
-                </p>
+      <div className="space-y-8">
+      {/* Hero Section with Stats */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* Welcome Card - Takes 2 columns on large screens */}
+        <div className="lg:col-span-2">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary via-primary/95 to-primary/90 p-5 sm:p-8 lg:p-10 text-primary-foreground shadow-2xl">
+            <div className="relative z-10">
+              <p className="text-xs sm:text-sm lg:text-base opacity-90 mb-1.5 sm:mb-2">Bonjour,</p>
+              <h1 className="text-xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4 leading-tight">
+                {user?.first_name} {user?.last_name}
+              </h1>
+              <p className="text-xs sm:text-base lg:text-lg opacity-80 mb-4 sm:mb-6">Gérez vos transactions en toute simplicité</p>
+              
+              {/* Quick Actions in Hero */}
+              <div className="flex gap-1.5 sm:gap-2 md:gap-3 mt-4 sm:mt-6">
+                <Link href="/dashboard/deposit" className="flex-1 min-w-0">
+                  <div className="group flex items-center justify-center gap-1 sm:gap-2 md:gap-3 px-2 sm:px-3 md:px-5 py-1.5 sm:py-2 md:py-3 rounded-md sm:rounded-lg md:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all cursor-pointer border border-white/20">
+                    <div className="p-1 sm:p-1.5 md:p-2 rounded-md sm:rounded-lg bg-white/30 flex-shrink-0">
+                      <ArrowDownToLine className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
+                    </div>
+                    <span className="font-semibold text-[10px] sm:text-xs md:text-sm lg:text-base truncate">Dépôt</span>
+                  </div>
+                </Link>
+                <Link href="/dashboard/withdrawal" className="flex-1 min-w-0">
+                  <div className="group flex items-center justify-center gap-1 sm:gap-2 md:gap-3 px-2 sm:px-3 md:px-5 py-1.5 sm:py-2 md:py-3 rounded-md sm:rounded-lg md:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all cursor-pointer border border-white/20">
+                    <div className="p-1 sm:p-1.5 md:p-2 rounded-md sm:rounded-lg bg-white/30 flex-shrink-0">
+                      <ArrowUpFromLine className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
+                    </div>
+                    <span className="font-semibold text-[10px] sm:text-xs md:text-sm lg:text-base truncate">Retrait</span>
+                  </div>
+                </Link>
+                <Link href="/dashboard/coupon" className="flex-1 min-w-0">
+                  <div className="group flex items-center justify-center gap-1 sm:gap-2 md:gap-3 px-2 sm:px-3 md:px-5 py-1.5 sm:py-2 md:py-3 rounded-md sm:rounded-lg md:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all cursor-pointer border border-white/20">
+                    <div className="p-1 sm:p-1.5 md:p-2 rounded-md sm:rounded-lg bg-white/30 flex-shrink-0">
+                      <Ticket className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
+                    </div>
+                    <span className="font-semibold text-[10px] sm:text-xs md:text-sm lg:text-base truncate">Coupon</span>
+                  </div>
+                </Link>
               </div>
             </div>
-            <Button
-              asChild
-              size="sm"
-              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              <a
-                href="/app-v1.0.5.apk"
-                download="TurainCash-v1.0.5.apk"
-                className="flex items-center gap-2"
-              >
-                <Download className="h-4 w-4" />
-                <span className="text-xs sm:text-sm font-medium">Télécharger</span>
-              </a>
-            </Button>
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-white/5 rounded-full -mr-24 -mt-24 sm:-mr-32 sm:-mt-32 blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-36 h-36 sm:w-48 sm:h-48 bg-white/5 rounded-full -ml-18 -mb-18 sm:-ml-24 sm:-mb-24 blur-3xl"></div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Balance card */}
-      {/* <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0">
-        <CardHeader>
-          <CardDescription className="text-primary-foreground/80">Solde disponible</CardDescription>
-          <CardTitle className="text-4xl font-bold">
-            {user?.balance?.toLocaleString("fr-FR", {
-              style: "currency",
-              currency: "XOF",
-              minimumFractionDigits: 0,
-            }) || "0 FCFA"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-3">
-            <Button asChild variant="secondary" size="sm" className="text-deposit border-deposit hover:bg-green-500/10">
-              <Link href="/dashboard/deposit">
-                <ArrowDownToLine className="mr-2 h-4 w-4 text-deposit" />
-                Déposer
-              </Link>
-            </Button>
-            <Button asChild variant="secondary" size="sm" className="text-withdrawal border-withdrawal hover:bg-blue-500/10">
-              <Link href="/dashboard/withdrawal">
-                <ArrowUpFromLine className="mr-2 h-4 w-4 text-withdrawal" />
-                Retirer
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card> */}
-
-      {/* Quick actions */}
-      <div>
-        {/* <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Actions rapides</h2> */}
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          <Button asChild size="sm" className="flex-1 sm:flex-initial min-w-[120px] sm:min-w-[140px] h-10 sm:h-9 bg-[#16a34a] hover:bg-[#15803d] text-white">
-            <Link href="/dashboard/deposit" className="flex items-center justify-center gap-2">
-              <ArrowDownToLine className="h-4 w-4" />
-              <span className="text-xs sm:text-sm font-medium">Dépôt</span>
-            </Link>
-          </Button>
-          <Button asChild size="sm" className="flex-1 sm:flex-initial min-w-[120px] sm:min-w-[140px] h-10 sm:h-9 bg-[#2563eb] hover:bg-[#1d4ed8] text-white">
-            <Link href="/dashboard/withdrawal" className="flex items-center justify-center gap-2">
-              <ArrowUpFromLine className="h-4 w-4" />
-              <span className="text-xs sm:text-sm font-medium">Retrait</span>
-            </Link>
-          </Button>
         </div>
-      </div>
 
-      {/* Advertisement Section */}
-      <div className="w-full">
-        <Card className="overflow-hidden border-2 border-dashed border-muted-foreground/30 hover:border-muted-foreground/50 transition-colors p-0 py-0">
-          <CardContent className="p-0">
-            {isLoadingAd ? (
-              <div className="relative w-full aspect-[16/9] sm:aspect-[17/9] lg:aspect-[18/9] bg-muted/30 flex items-center justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        {/* Advertisement Section with Download Button - Takes 1 column */}
+        <div className="lg:col-span-1 flex">
+          <div className="relative w-full flex flex-col rounded-2xl sm:rounded-3xl border-2 border-muted-foreground/20 hover:border-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden bg-background">
+          {isLoadingAd ? (
+              <div className="relative w-full min-h-[200px] sm:min-h-[250px] lg:min-h-[300px] bg-muted/20 flex items-center justify-center flex-1">
+                <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
               </div>
             ) : advertisements.length > 0 ? (
+              <>
+                <div className="relative w-full flex-shrink-0">
               <Carousel
                 setApi={setCarouselApi}
                 opts={{
@@ -264,15 +238,17 @@ export default function DashboardPage() {
                     if (!imageUrl || hasError) return null
                     
                     return (
-                      <CarouselItem key={adId} className="pl-0">
-                        <div className="relative w-full aspect-[16/9] sm:aspect-[17/9] lg:aspect-[18/9] bg-muted/30">
+                          <CarouselItem key={adId} className="pl-0 basis-full">
+                            <div className="relative w-full">
                           <Image
                             src={imageUrl}
                             alt={ad.title || "Publicité"}
-                            fill
-                            className={link ? "object-cover cursor-pointer" : "object-cover"}
-                            style={{ objectFit: 'cover' }}
+                                width={0}
+                                height={0}
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                className={link ? "w-full h-auto cursor-pointer" : "w-full h-auto"}
                             onError={() => handleAdImageError(adId)}
+                                priority={false}
                           />
                           {link && (
                             <a
@@ -289,120 +265,178 @@ export default function DashboardPage() {
                   })}
                 </CarouselContent>
               </Carousel>
+                </div>
+                {/* Download Button integrated */}
+                <div className="p-4 sm:p-5 border-t border-muted-foreground/20 bg-muted/5">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium flex items-center justify-center gap-2 border-2 hover:bg-primary hover:text-primary-foreground transition-all"
+                  >
+                    <a href="/app-v1.0.5.apk" download="Africash-v1.0.5.apk" className="flex items-center gap-2">
+                      <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="hidden sm:inline">Télécharger l'application mobile</span>
+                      <span className="sm:hidden">Télécharger l'app</span>
+                    </a>
+                  </Button>
+                </div>
+              </>
             ) : (
-              <div className="relative w-full aspect-[16/9] sm:aspect-[17/9] lg:aspect-[18/9] bg-muted/30 flex items-center justify-center">
-                <div className="text-center p-4">
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium">Espace publicitaire</p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">Publicité</p>
+              <div className="relative w-full flex flex-col flex-1">
+                <div className="relative w-full min-h-[200px] sm:min-h-[250px] lg:min-h-[300px] bg-gradient-to-br from-muted/30 to-muted/10 flex items-center justify-center border-b border-muted-foreground/20 flex-1">
+                  <div className="text-center p-4 sm:p-6">
+                    <p className="text-sm sm:text-base lg:text-lg text-muted-foreground font-semibold">Espace publicitaire</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground/70 mt-1.5">Publicité</p>
+                  </div>
+                </div>
+                {/* Download Button integrated */}
+                <div className="p-4 sm:p-5 border-t border-muted-foreground/20 bg-muted/5">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium flex items-center justify-center gap-2 border-2 hover:bg-primary hover:text-primary-foreground transition-all"
+                  >
+                    <a href="/app-v1.0.5.apk" download="Africash-v1.0.5.apk" className="flex items-center gap-2">
+                      <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="hidden sm:inline">Télécharger l'application mobile</span>
+                      <span className="sm:hidden">Télécharger l'app</span>
+                    </a>
+                  </Button>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+          </div>
+        </div>
 
-      {/* Recent activity */}
-      <div>
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h2 className="text-lg sm:text-xl font-semibold">Activité récente</h2>
-          <div className="flex items-center gap-1.5 sm:gap-2">
+      {/* Recent Activity - Clean Professional Design */}
+      <div className="space-y-4 sm:space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-semibold">Activité récente</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Vos dernières transactions</p>
+          </div>
+          <div className="flex items-center gap-2">
             <Button 
-              variant="outline" 
-              size="sm"
+              variant="ghost" 
+              size="icon"
               onClick={fetchRecentTransactions}
               disabled={isLoadingTransactions}
-              className="h-8 w-8 sm:h-9 sm:w-auto p-0 sm:px-3"
+              className="h-8 w-8 sm:h-9 sm:w-9"
             >
               <RefreshCw className={`h-4 w-4 ${isLoadingTransactions ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline ml-2">Actualiser</span>
             </Button>
-            <Button asChild variant="outline" size="sm" className="h-8 sm:h-9 text-xs sm:text-sm">
-              <Link href="/dashboard/history" className="flex items-center gap-1 sm:gap-2">
+            <Button asChild variant="ghost" size="sm" className="h-8 sm:h-9 text-xs sm:text-sm">
+              <Link href="/dashboard/history" className="flex items-center gap-1.5 sm:gap-2">
                 <span className="hidden sm:inline">Voir tout</span>
                 <span className="sm:hidden">Tout</span>
-                <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
         </div>
         
         {isLoadingTransactions ? (
-          <Card>
-            <CardContent className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </CardContent>
-          </Card>
+          <div className="flex items-center justify-center py-12 sm:py-16 rounded-lg border border-border">
+            <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+          </div>
         ) : recentTransactions.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Wallet className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground text-center">Aucune transaction récente</p>
-              <p className="text-sm text-muted-foreground text-center mt-1">Vos transactions apparaîtront ici</p>
-            </CardContent>
-          </Card>
+          <div className="flex flex-col items-center justify-center py-12 sm:py-16 rounded-lg border border-border bg-muted/30">
+            <Wallet className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mb-3 opacity-50" />
+            <p className="text-sm sm:text-base text-muted-foreground text-center font-medium">Aucune transaction récente</p>
+            <p className="text-xs sm:text-sm text-muted-foreground text-center mt-1">Vos transactions apparaîtront ici</p>
+          </div>
         ) : (
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-1.5 sm:space-y-2">
             {recentTransactions.map((transaction) => (
-              <Card key={transaction.id} className="hover:shadow-md transition-shadow">
+              <Card 
+                key={transaction.id} 
+                className="group border border-border hover:border-border/80 transition-colors duration-150 bg-card"
+              >
                 <CardContent className="p-3 sm:p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
-                      <div className={`p-1.5 sm:p-2 rounded-full flex-shrink-0 ${
-                        transaction.type_trans === "deposit" 
-                          ? "bg-green-500/10 text-green-500" 
-                          : "bg-blue-500/10 text-blue-500"
-                      }`}>
-                        {transaction.type_trans === "deposit" ? (
-                          <ArrowDownToLine className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        ) : (
-                          <ArrowUpFromLine className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
-                          <h3 className="font-semibold text-sm sm:text-base truncate">#{transaction.reference}</h3>
-                          {getTypeBadge(transaction.type_trans)}
-                          {getStatusBadge(transaction.status)}
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    {/* Icon */}
+                    <div className={`p-2 rounded-lg flex-shrink-0 ${
+                            transaction.type_trans === "deposit" 
+                        ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400" 
+                        : "bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400"
+                          }`}>
+                            {transaction.type_trans === "deposit" ? (
+                        <ArrowDownToLine className="h-4 w-4 sm:h-5 sm:w-5" />
+                            ) : (
+                        <ArrowUpFromLine className="h-4 w-4 sm:h-5 sm:w-5" />
+                            )}
+                          </div>
+                    
+                    {/* Main Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                        {/* Left: Details */}
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-sm sm:text-base text-foreground">
+                              #{transaction.reference}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              {getTypeBadge(transaction.type_trans)}
+                              {getStatusBadge(transaction.status)}
+                            </div>
+                          </div>
+                          <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                            {transaction.app_details?.name || transaction.app}
+                          </p>
+                          <p className="text-[11px] sm:text-xs text-muted-foreground">
+                            {transaction.user_app_id && (
+                              <span className="font-mono">ID pari: {transaction.user_app_id}</span>
+                            )}
+                            {transaction.user_app_id && transaction.phone_number && <span className="mx-1.5">•</span>}
+                            {transaction.phone_number && (
+                              <span>{formatPhoneNumberForDisplay(transaction.phone_number)}</span>
+                            )}
+                            {(transaction.user_app_id || transaction.phone_number) && (
+                              <span className="mx-1.5">•</span>
+                            )}
+                            <span>{format(new Date(transaction.created_at), "dd MMM yyyy, HH:mm", { locale: fr })}</span>
+                          </p>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                          {transaction.app_details?.name || transaction.app} • {formatPhoneNumberForDisplay(transaction.phone_number)}
-                        </p>
+                        
+                        {/* Right: Amount */}
+                        <div className="flex-shrink-0 text-right">
+                          <p className={`text-base sm:text-lg font-semibold ${
+                            transaction.type_trans === "deposit" 
+                              ? "text-emerald-600 dark:text-emerald-400" 
+                              : "text-orange-600 dark:text-orange-400"
+                          }`}>
+                            {transaction.type_trans === "deposit" ? "+" : "−"}
+                            {transaction.amount.toLocaleString("fr-FR", {
+                              style: "currency",
+                              currency: "XOF",
+                              minimumFractionDigits: 0,
+                            })}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-left sm:text-right flex-shrink-0">
-                      <p className="text-base sm:text-lg font-semibold">
-                        {transaction.amount.toLocaleString("fr-FR", {
-                          style: "currency",
-                          currency: "XOF",
-                          minimumFractionDigits: 0,
-                        })}
-                      </p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
-                        {format(new Date(transaction.created_at), "dd MMM à HH:mm", {
-                          locale: fr,
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+              ))}
           </div>
         )}
       </div>
-    </div>
-
-    <Popover open={isChatPopoverOpen} onOpenChange={setIsChatPopoverOpen}>
-      <PopoverTrigger asChild>
+      </div>
+      
+      <Popover open={isChatPopoverOpen} onOpenChange={setIsChatPopoverOpen}>
+        <PopoverTrigger asChild>
         <Button
-          className="fixed right-4 bottom-24 sm:bottom-10 sm:right-8 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 transition transform hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-          aria-label="Ouvrir le chat"
+          className="fixed right-4 bottom-24 sm:bottom-10 sm:right-8 h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary border border-primary/20"
+          aria-label="Support client"
         >
-          <MessageSquare className="h-6 w-6" />
-          <span className="sr-only">Ouvrir le chat</span>
+          <Headphones className="h-5 w-5 sm:h-6 sm:w-6" />
+          <span className="sr-only">Support client</span>
         </Button>
-      </PopoverTrigger>
-      <PopoverContent 
+        </PopoverTrigger>
+        <PopoverContent 
         className="w-56 p-2 mb-2 mr-2" 
         align="end"
         side="top"
@@ -437,11 +471,11 @@ export default function DashboardPage() {
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
               // Replace with your Telegram username
-              window.open("https://t.me/Turaincash", "_blank")
+              window.open("https://t.me/Africash", "_blank")
               setIsChatPopoverOpen(false)
             }}
           >
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500 text-white">
               <Send className="h-4 w-4" />
             </div>
             <div className="flex flex-col items-start">
@@ -450,8 +484,8 @@ export default function DashboardPage() {
             </div>
           </Button>
         </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
     </>
   )
 }
