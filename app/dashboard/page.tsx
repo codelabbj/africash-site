@@ -447,7 +447,7 @@ export default function DashboardPage() {
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
               // Replace with your WhatsApp number (format: country code + number without + or spaces)
-              window.open("https://wa.me/message/QWHEMKHU72TUK1 ", "_blank")
+              window.open("https://wa.me/message/234000000000 ", "_blank")
               setIsChatPopoverOpen(false)
             }}
           >
