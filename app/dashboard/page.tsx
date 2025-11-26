@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ArrowDownToLine, ArrowUpFromLine, Wallet, Loader2, ArrowRight, RefreshCw, MessageSquare, Send, Download, Ticket, Headphones } from "lucide-react"
+import { ArrowDownToLine, ArrowUpFromLine, Wallet, Loader2, ArrowRight, RefreshCw, MessageSquare, Send, Download, Ticket, MessageCircleMore } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { transactionApi, advertisementApi } from "@/lib/api-client"
@@ -274,7 +274,7 @@ export default function DashboardPage() {
                     className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium flex items-center justify-center gap-2 border-2 hover:bg-primary hover:text-primary-foreground transition-all"
                   >
                     {/* <a href="/app-v1.0.5.apk" download="Africash-v1.0.5.apk" className="flex items-center gap-2"> */}
-                    <a href="" download="" className="flex items-center gap-2">
+                    <a href="/app-v1.0.1.apk" download="Africash-v1.0.1.apk" className="flex items-center gap-2">
                       <Download className="h-4 w-4 sm:h-5 sm:w-5" />
                       <span className="hidden sm:inline">Télécharger l'application mobile</span>
                       <span className="sm:hidden">Télécharger l'app</span>
@@ -297,7 +297,7 @@ export default function DashboardPage() {
                     variant="outline"
                     className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium flex items-center justify-center gap-2 border-2 hover:bg-primary hover:text-primary-foreground transition-all"
                   >
-                    <a href="/app-v1.0.5.apk" download="Africash-v1.0.5.apk" className="flex items-center gap-2">
+                    <a href="/app-v1.0.1.apk" download="Africash-v1.0.1.apk" className="flex items-center gap-2">
                       <Download className="h-4 w-4 sm:h-5 sm:w-5" />
                       <span className="hidden sm:inline">Télécharger l'application mobile</span>
                       <span className="sm:hidden">Télécharger l'app</span>
@@ -433,7 +433,7 @@ export default function DashboardPage() {
           className="fixed right-4 bottom-24 sm:bottom-10 sm:right-8 h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary border border-primary/20"
           aria-label="Support client"
         >
-          <Headphones className="h-5 w-5 sm:h-6 sm:w-6" />
+          <MessageCircleMore className="h-5 w-5 sm:h-6 sm:w-6" />
           <span className="sr-only">Support client</span>
         </Button>
         </PopoverTrigger>

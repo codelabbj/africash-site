@@ -155,7 +155,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-4xl mx-auto w-full px-3 sm:px-4 lg:px-6 pb-4 sm:pb-6">
       <div className="space-y-3 sm:space-y-4 lg:space-y-5">
-        {/* Header */}
+      {/* Header */}
         <div className="pb-2 sm:pb-3 border-b border-border/50">
           <div className="flex items-start sm:items-center gap-2 sm:gap-3 mb-2">
             <Button
@@ -171,16 +171,16 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 flex-shrink-0">
                 <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-              </div>
+          </div>
               <div className="flex-1 min-w-0">
                 <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight truncate">Mon profil</h1>
                 <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
-                  Gérez vos informations personnelles
-                </p>
+          Gérez vos informations personnelles
+        </p>
               </div>
             </div>
           </div>
-        </div>
+      </div>
 
       {/* Profile Information Card */}
       <Card className="border-border/50">
