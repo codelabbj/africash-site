@@ -448,7 +448,7 @@ export default function DashboardPage() {
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
               // Replace with your WhatsApp number (format: country code + number without + or spaces)
-              window.open("https://wa.me/message/234000000000 ", "_blank")
+              window.open("https://wa.me/message/B64PDYDE6JPAI1", "_blank")
               setIsChatPopoverOpen(false)
             }}
           >
@@ -472,7 +472,7 @@ export default function DashboardPage() {
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
               // Replace with your Telegram username
-              window.open("https://t.me/Africash", "_blank")
+              window.open("https://t.me/africashio", "_blank")
               setIsChatPopoverOpen(false)
             }}
           >
