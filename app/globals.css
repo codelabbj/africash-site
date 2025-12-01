@@ -10,7 +10,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #760ceb;
+  --primary: #263F8C;
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -22,8 +22,8 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: #760ceb;
-  --chart-1: #760ceb;
+  --ring: #263F8C;
+  --chart-1: #263F8C;
   --chart-2: #671ad3;
   --chart-3: #6d15dc;
   --chart-4: #8502fb;
@@ -31,12 +31,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #760ceb;
+  --sidebar-primary: #263F8C;
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: #760ceb;
+  --sidebar-ring: #263F8C;
 }
 
 .dark {
@@ -46,7 +46,7 @@
   --card-foreground: oklch(0.95 0 0);
   --popover: oklch(0.22 0.03 280);
   --popover-foreground: oklch(0.95 0 0);
-  --primary: #8502fb;
+  --primary: #263F8C;
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.28 0.04 280);
   --secondary-foreground: oklch(0.95 0 0);
@@ -58,20 +58,20 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.32 0.04 280);
   --input: oklch(0.26 0.03 280);
-  --ring: #8502fb;
-  --chart-1: #760ceb;
+  --ring: #263F8C;
+  --chart-1: #263F8C;
   --chart-2: #671ad3;
   --chart-3: #6d15dc;
   --chart-4: #8502fb;
   --chart-5: #522699;
   --sidebar: oklch(0.20 0.03 280);
   --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: #8502fb;
+  --sidebar-primary: #263F8C;
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.28 0.04 280);
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(0.32 0.04 280);
-  --sidebar-ring: #8502fb;
+  --sidebar-ring: #263F8C;
 }
 
 @theme inline {
@@ -98,10 +98,10 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-success: #760ceb;
+  --color-success: #263F8C;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  --color-deposit: #760ceb;
+  --color-deposit: #263F8C;
   --color-withdrawal: #671ad3;
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);

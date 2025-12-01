@@ -13,7 +13,7 @@ import {
 import { ArrowDownToLine, ArrowUpFromLine, Wallet, Loader2, ArrowRight, RefreshCw, MessageSquare, Send, Download, Ticket, MessageCircleMore } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { transactionApi, advertisementApi } from "@/lib/api-client"
+import { transactionApi, advertisementApi, settingsApi } from "@/lib/api-client"
 import type { Transaction, Advertisement } from "@/lib/types"
 import { toast } from "react-hot-toast"
 import { format } from "date-fns"
@@ -36,6 +36,8 @@ export default function DashboardPage() {
   const [isChatPopoverOpen, setIsChatPopoverOpen] = useState(false)
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const [isCarouselPaused, setIsCarouselPaused] = useState(false)
+  const [whatsappPhone, setWhatsappPhone] = useState<string>("")
+  const [telegramUsername, setTelegramUsername] = useState<string>("")
 
   // Prevent browser back button from going to login
   useEffect(() => {
@@ -94,10 +96,25 @@ export default function DashboardPage() {
     }
   }
 
+  const fetchSettings = async () => {
+    try {
+      const settings = await settingsApi.get()
+      if (settings.whatsapp_phone) {
+        setWhatsappPhone(settings.whatsapp_phone)
+      }
+      if (settings.telegram) {
+        setTelegramUsername(settings.telegram)
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error)
+    }
+  }
+
   useEffect(() => {
     if (user) {
       fetchRecentTransactions()
       fetchAdvertisement()
+      fetchSettings()
     }
   }, [user])
 
@@ -163,8 +180,8 @@ export default function DashboardPage() {
       {/* Hero Section with Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Welcome Card - Takes 2 columns on large screens */}
-        <div className="lg:col-span-2">
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary via-primary/95 to-primary/90 p-5 sm:p-8 lg:p-10 text-primary-foreground shadow-2xl">
+        <div className="lg:col-span-2 flex">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary via-primary/95 to-primary/90 p-5 sm:p-8 lg:p-10 text-primary-foreground shadow-2xl w-full flex flex-col justify-between">
             <div className="relative z-10">
               <p className="text-xs sm:text-sm lg:text-base opacity-90 mb-1.5 sm:mb-2">Bonjour,</p>
               <h1 className="text-xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4 leading-tight">
@@ -447,8 +464,9 @@ export default function DashboardPage() {
             variant="ghost"
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
-              // Replace with your WhatsApp number (format: country code + number without + or spaces)
-              window.open("https://wa.me/message/B64PDYDE6JPAI1", "_blank")
+              if (whatsappPhone) {
+                window.open(`https://wa.me/${whatsappPhone}`, "_blank")
+              }
               setIsChatPopoverOpen(false)
             }}
           >
@@ -471,8 +489,9 @@ export default function DashboardPage() {
             variant="ghost"
             className="w-full justify-start gap-3 h-auto py-3"
             onClick={() => {
-              // Replace with your Telegram username
-              window.open("https://t.me/africashio", "_blank")
+              if (telegramUsername) {
+                window.open(`https://t.me/${telegramUsername}`, "_blank")
+              }
               setIsChatPopoverOpen(false)
             }}
           >

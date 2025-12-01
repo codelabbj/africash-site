@@ -52,6 +52,7 @@ export default function DepositPage() {
   const [isMoovUssdModalOpen, setIsMoovUssdModalOpen] = useState(false)
   const [moovUssdCode, setMoovUssdCode] = useState<string | null>(null)
   const [moovMerchantPhone, setMoovMerchantPhone] = useState<string | null>(null)
+  const [ussdNetworkName, setUssdNetworkName] = useState<string>("Moov") // Track which network for USSD modal
 
   // Redirect if not authenticated
   if (!user) {
@@ -90,8 +91,15 @@ export default function DepositPage() {
     }
   }
 
-  const handleMoovUssdFlow = async (amountValue: number) => {
-    if (!selectedNetwork || selectedNetwork.name?.toLowerCase() !== "moov") {
+  const handleUssdFlow = async (amountValue: number, paymentByLink?: boolean) => {
+    if (!selectedNetwork) {
+      return false
+    }
+
+    const networkName = selectedNetwork.name?.toLowerCase()
+    
+    // Check if network is Moov or Orange
+    if (networkName !== "moov" && networkName !== "orange") {
       return false
     }
 
@@ -100,18 +108,40 @@ export default function DepositPage() {
       return false
     }
 
+    // For Orange: if payment_by_link is true, don't use USSD flow
+    if (networkName === "orange" && paymentByLink === true) {
+      return false
+    }
+
     try {
       const settings = await settingsApi.get()
-      const moovPhone = settings.moov_merchant_phone || settings.moov_marchand_phone
+      
+      // Get the appropriate merchant phone based on network
+      let merchantPhone: string | undefined
+      if (networkName === "moov") {
+        merchantPhone = settings.moov_marchand_phone
+      } else { // orange
+        merchantPhone = settings.orange_marchand_phone
+      }
 
-      if (!moovPhone) {
+      if (!merchantPhone) {
+        console.error(`Numéro marchand ${networkName} non trouvé dans les paramètres`)
         return false
       }
 
       const ussdAmount = Math.max(1, Math.floor(amountValue * 0.99))
-      const ussdCode = `*155*2*1*${moovPhone}*${ussdAmount}#`
+      
+      // Different USSD codes for Moov and Orange
+      let ussdCode: string
+      if (networkName === "moov") {
+        ussdCode = `*155*2*1*${merchantPhone}*${ussdAmount}#`
+        setUssdNetworkName("Moov")
+      } else { // orange
+        ussdCode = `*144*2*1*${merchantPhone}*${ussdAmount}#`
+        setUssdNetworkName("Orange")
+      }
 
-      setMoovMerchantPhone(moovPhone)
+      setMoovMerchantPhone(merchantPhone)
       setMoovUssdCode(ussdCode)
       setIsMoovUssdModalOpen(true)
 
@@ -119,7 +149,7 @@ export default function DepositPage() {
 
       return true
     } catch (error) {
-      console.error("Erreur lors de la récupération des paramètres Moov:", error)
+      console.error("Erreur lors de la récupération des paramètres USSD:", error)
       return false
     }
   }
@@ -165,16 +195,21 @@ export default function DepositPage() {
       
       toast.success("Dépôt initié avec succès!")
       
-      // Check if transaction_link exists in the response
-      if (response.transaction_link) {
+      // Get payment_by_link from response (if exists)
+      const paymentByLink = response.payment_by_link
+      
+      // Check if transaction_link exists and payment_by_link is true
+      if (response.transaction_link && paymentByLink === true) {
         setTransactionLink(response.transaction_link)
         setIsTransactionLinkModalOpen(true)
         setIsConfirmationOpen(false)
       } else {
-        const handled = await handleMoovUssdFlow(amount)
+        // Try USSD flow for Moov or Orange (if payment_by_link is false or undefined)
+        const handled = await handleUssdFlow(amount, paymentByLink)
         if (!handled) {
           router.push("/dashboard")
         }
+        setIsConfirmationOpen(false)
       }
     } catch (error: any) {
       // Check for rate limit error (error_time_message)
@@ -195,7 +230,8 @@ export default function DepositPage() {
       setIsTransactionLinkModalOpen(false)
       setTransactionLink(null)
       
-      const handled = await handleMoovUssdFlow(amount)
+      // After opening transaction link, try USSD flow (for Moov/Orange if applicable)
+      const handled = await handleUssdFlow(amount, false)
       if (!handled) {
         router.push("/dashboard")
       }
@@ -372,15 +408,15 @@ export default function DepositPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Moov USSD fallback modal */}
+        {/* USSD fallback modal (Moov/Orange) */}
         <Dialog open={isMoovUssdModalOpen} onOpenChange={handleMoovModalClose}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Finaliser la transaction Moov</DialogTitle>
+              <DialogTitle>Finaliser la transaction {ussdNetworkName}</DialogTitle>
               <DialogDescription asChild>
                 <div className="text-sm text-muted-foreground space-y-2">
                   <p>
-                    Nous n&apos;avons pas pu ouvrir automatiquement le composeur téléphonique. Copiez le code ci-dessous et collez-le dans l&apos;application Téléphone pour terminer votre transaction Moov.
+                    Nous n&apos;avons pas pu ouvrir automatiquement le composeur téléphonique. Copiez le code ci-dessous et collez-le dans l&apos;application Téléphone pour terminer votre transaction {ussdNetworkName}.
                   </p>
                   {moovMerchantPhone && (
                     <p>
