@@ -19,7 +19,7 @@ export default function AuthLayout({
           priority
         />
       </div>
-      <div className="w-full max-w-md flex-1 flex items-center">{children}</div>
+      <div className="w-full max-w-md mx-auto">{children}</div>
     </div>
   )
 }

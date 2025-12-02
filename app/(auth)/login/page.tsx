@@ -48,7 +48,7 @@ type ForgotPasswordEmailFormData = z.infer<typeof forgotPasswordEmailSchema>
 type ForgotPasswordOtpFormData = z.infer<typeof forgotPasswordOtpSchema>
 type ForgotPasswordNewPasswordFormData = z.infer<typeof forgotPasswordNewPasswordSchema>
 
-const APK_DOWNLOAD_URL = "/app-v1.0.1.apk"
+const APK_DOWNLOAD_URL = "https://africash-mobile-app.vercel.app/releases/app-v1.0.1.apk"
 const APK_FILE_NAME = "Africash-v1.0.1.apk"
 
 export default function LoginPage() {
