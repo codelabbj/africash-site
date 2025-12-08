@@ -116,12 +116,16 @@ export default function DepositPage() {
     try {
       const settings = await settingsApi.get()
       
-      // Get the appropriate merchant phone based on network
+      // Get the appropriate merchant phone based on network and country
       let merchantPhone: string | undefined
+
+      // Check if the network's country code is BF (Burkina Faso)
+      const isBurkinaFaso = selectedNetwork.country_code?.toLowerCase() === 'bf'
+
       if (networkName === "moov") {
-        merchantPhone = settings.moov_marchand_phone
+        merchantPhone = isBurkinaFaso ? settings.bf_moov_marchand_phone : settings.moov_marchand_phone
       } else { // orange
-        merchantPhone = settings.orange_marchand_phone
+        merchantPhone = isBurkinaFaso ? settings.bf_orange_marchand_phone : settings.orange_marchand_phone
       }
 
       if (!merchantPhone) {
