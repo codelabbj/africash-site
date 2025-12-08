@@ -111,59 +111,59 @@ export default function BonusPage() {
               </div>
             </div>
           </div>
-        </div>
+      </div>
 
         <Card className="border-border/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-base sm:text-lg font-semibold">Historique des bonus</CardTitle>
             <CardDescription className="text-xs sm:text-sm mt-1">Liste de tous vos bonus reçus</CardDescription>
-          </CardHeader>
+        </CardHeader>
           <CardContent className="p-4 sm:p-5 lg:p-6">
-            {isLoading ? (
+          {isLoading ? (
               <div className="flex items-center justify-center py-16 sm:py-20">
                 <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
-              </div>
-            ) : bonuses.length === 0 ? (
+            </div>
+          ) : bonuses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center">
                 <div className="p-3 rounded-full bg-muted/50 mb-4">
                   <Gift className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
                 </div>
                 <p className="text-sm sm:text-base font-medium text-foreground/70">Aucun bonus enregistré</p>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1.5">Vos bonus de parrainage apparaîtront ici</p>
-              </div>
-            ) : (
+            </div>
+          ) : (
               <div className="space-y-2.5 sm:space-y-3">
-                {bonuses.map((bonus) => (
+              {bonuses.map((bonus) => (
                   <Card key={bonus.id} className="border-border/50 hover:border-primary/30 transition-all duration-200 hover:shadow-md">
                     <CardContent className="p-4 sm:p-5">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <div className="flex items-center gap-2">
                             <Badge variant="default" className="text-xs sm:text-sm font-semibold">
-                              {parseFloat(bonus.amount).toLocaleString("fr-FR", {
-                                style: "currency",
-                                currency: "XOF",
-                                minimumFractionDigits: 0,
-                              })}
-                            </Badge>
-                          </div>
-                          <p className="text-sm sm:text-base font-medium text-foreground">
-                            {bonus.reason_bonus || "Bonus de parrainage"}
-                          </p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
-                            {format(new Date(bonus.created_at), "dd MMMM yyyy à HH:mm", {
-                              locale: fr,
+                            {parseFloat(bonus.amount).toLocaleString("fr-FR", {
+                              style: "currency",
+                              currency: "XOF",
+                              minimumFractionDigits: 0,
                             })}
-                          </p>
+                          </Badge>
                         </div>
+                          <p className="text-sm sm:text-base font-medium text-foreground">
+                          {bonus.reason_bonus || "Bonus de parrainage"}
+                        </p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          {format(new Date(bonus.created_at), "dd MMMM yyyy à HH:mm", {
+                            locale: fr,
+                          })}
+                        </p>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
       </div>
     </div>
   )

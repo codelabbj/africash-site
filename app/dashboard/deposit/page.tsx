@@ -194,18 +194,15 @@ export default function DepositPage() {
       })
       
       toast.success("Dépôt initié avec succès!")
-      
-      // Get payment_by_link from response (if exists)
-      const paymentByLink = response.payment_by_link
-      
-      // Check if transaction_link exists and payment_by_link is true
-      if (response.transaction_link && paymentByLink === true) {
+
+      // Check if selected network supports payment by link OR transaction link exists
+      if (selectedNetwork.payment_by_link || response.transaction_link) {
         setTransactionLink(response.transaction_link)
         setIsTransactionLinkModalOpen(true)
         setIsConfirmationOpen(false)
       } else {
         // Try USSD flow for Moov or Orange (if payment_by_link is false or undefined)
-        const handled = await handleUssdFlow(amount, paymentByLink)
+        const handled = await handleUssdFlow(amount, selectedNetwork.payment_by_link)
         if (!handled) {
           router.push("/dashboard")
         }

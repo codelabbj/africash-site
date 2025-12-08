@@ -110,12 +110,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               
               {/* Theme Toggle */}
               <div className="hidden sm:block">
-                <ThemeToggle />
+              <ThemeToggle />
               </div>
               
               {/* User Menu */}
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
                     className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg hover:bg-muted/80 transition-colors p-0"
@@ -124,34 +124,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <AvatarFallback className="bg-gradient-to-br from-primary/90 to-primary text-primary-foreground text-[10px] sm:text-xs font-semibold">
                         {userInitials}
                       </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 sm:w-64 shadow-lg border-border/50" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal px-3 py-2.5">
                     <div className="flex flex-col space-y-0.5">
                       <p className="text-sm font-semibold leading-tight text-foreground">
-                        {user.first_name} {user.last_name}
-                      </p>
+                      {user.first_name} {user.last_name}
+                    </p>
                       <p className="text-xs leading-tight text-muted-foreground truncate">{user.email}</p>
-                    </div>
-                  </DropdownMenuLabel>
+                  </div>
+                </DropdownMenuLabel>
                   <DropdownMenuSeparator className="my-1" />
                   <DropdownMenuItem asChild className="cursor-pointer px-3 py-2">
-                    <Link href="/dashboard/profile" className="flex items-center w-full">
-                      <User className="mr-2 h-4 w-4" />
+                  <Link href="/dashboard/profile" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
                       <span className="text-sm">Profil</span>
-                    </Link>
-                  </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuItem>
                   <DropdownMenuSeparator className="my-1" />
                   <DropdownMenuItem 
                     onClick={logout} 
                     className="text-destructive focus:text-destructive cursor-pointer px-3 py-2"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-2 h-4 w-4" />
                     <span className="text-sm">Déconnexion</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
               </DropdownMenu>
               
               {/* Mobile Theme Toggle */}

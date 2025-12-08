@@ -98,8 +98,8 @@ export default function CouponPage() {
               <div className="flex-1">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">Mes Coupons</h1>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                  Gérez vos codes promo et coupons
-                </p>
+            Gérez vos codes promo et coupons
+          </p>
               </div>
             </div>
           </div>

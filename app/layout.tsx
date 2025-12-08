@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Providers>
           <div className="flex-1 flex flex-col">
-            {children}
+              {children}
           </div>
           <Footer />
         </Providers>
