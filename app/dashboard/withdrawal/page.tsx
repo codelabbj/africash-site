@@ -21,11 +21,11 @@ import Link from "next/link"
 export default function WithdrawalPage() {
   const router = useRouter()
   const { user } = useAuth()
-  
+
   // Step management
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 5
-  
+
   // Form data
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null)
   const [selectedBetId, setSelectedBetId] = useState<UserAppId | null>(null)
@@ -33,7 +33,7 @@ export default function WithdrawalPage() {
   const [selectedPhone, setSelectedPhone] = useState<UserPhone | null>(null)
   const [amount, setAmount] = useState(0)
   const [withdriwalCode, setWithdriwalCode] = useState("")
-  
+
   // Confirmation dialog
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -75,9 +75,9 @@ export default function WithdrawalPage() {
         withdriwal_code: withdriwalCode,
         source: "web"
       })
-      
+
       toast.success("Retrait initié avec succès!")
-      
+
       router.push("/dashboard")
     } catch (error: any) {
       // Check for rate limit error (error_time_message)
@@ -103,10 +103,10 @@ export default function WithdrawalPage() {
       case 4:
         return selectedPhone !== null
       case 5:
-        return amount > 0 && selectedPlatform && 
-               withdriwalCode.length >= 4 &&
-               amount >= selectedPlatform.minimun_with && 
-               amount <= selectedPlatform.max_win
+        return amount > 0 && selectedPlatform &&
+          withdriwalCode.length >= 4 &&
+          amount >= selectedPlatform.minimun_with &&
+          amount <= selectedPlatform.max_win
       default:
         return false
     }
@@ -120,6 +120,7 @@ export default function WithdrawalPage() {
             selectedPlatform={selectedPlatform}
             onSelect={setSelectedPlatform}
             onNext={handleNext}
+            type="withdrawal"
           />
         )
       case 2:
@@ -150,7 +151,7 @@ export default function WithdrawalPage() {
           />
         )
       case 5:
-    return (
+        return (
           <AmountStep
             amount={amount}
             setAmount={setAmount}
@@ -193,8 +194,8 @@ export default function WithdrawalPage() {
         </div>
 
         {/* Progress Bar */}
-        <TransactionProgressBar 
-          currentStep={currentStep} 
+        <TransactionProgressBar
+          currentStep={currentStep}
           totalSteps={totalSteps}
           type="withdrawal"
         />
@@ -237,7 +238,7 @@ export default function WithdrawalPage() {
           isLoading={isSubmitting}
         />
 
-              </div>
+      </div>
     </div>
   )
 }

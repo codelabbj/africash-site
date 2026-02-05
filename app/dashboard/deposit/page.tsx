@@ -30,22 +30,22 @@ import {
 export default function DepositPage() {
   const router = useRouter()
   const { user } = useAuth()
-  
+
   // Step management
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 5
-  
+
   // Form data
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null)
   const [selectedBetId, setSelectedBetId] = useState<UserAppId | null>(null)
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null)
   const [selectedPhone, setSelectedPhone] = useState<UserPhone | null>(null)
   const [amount, setAmount] = useState(0)
-  
+
   // Confirmation dialog
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Transaction link modal
   const [isTransactionLinkModalOpen, setIsTransactionLinkModalOpen] = useState(false)
   const [transactionLink, setTransactionLink] = useState<string | null>(null)
@@ -97,7 +97,7 @@ export default function DepositPage() {
     }
 
     const networkName = selectedNetwork.name?.toLowerCase()
-    
+
     // Check if network is Moov or Orange
     if (networkName !== "moov" && networkName !== "orange") {
       return false
@@ -115,7 +115,7 @@ export default function DepositPage() {
 
     try {
       const settings = await settingsApi.get()
-      
+
       // Get the appropriate merchant phone based on network and country
       let merchantPhone: string | undefined
 
@@ -134,7 +134,7 @@ export default function DepositPage() {
       }
 
       const ussdAmount = Math.max(1, Math.floor(amountValue * 0.99))
-      
+
       // Different USSD codes for Moov and Orange
       let ussdCode: string
       if (networkName === "moov") {
@@ -196,7 +196,7 @@ export default function DepositPage() {
         network: selectedNetwork.id,
         source: "web"
       })
-      
+
       toast.success("Dépôt initié avec succès!")
 
       // Check if selected network supports payment by link OR transaction link exists
@@ -230,7 +230,7 @@ export default function DepositPage() {
       window.open(transactionLink, "_blank", "noopener,noreferrer")
       setIsTransactionLinkModalOpen(false)
       setTransactionLink(null)
-      
+
       // After opening transaction link, try USSD flow (for Moov/Orange if applicable)
       const handled = await handleUssdFlow(amount, false)
       if (!handled) {
@@ -250,9 +250,9 @@ export default function DepositPage() {
       case 4:
         return selectedPhone !== null
       case 5:
-        return amount > 0 && selectedPlatform && 
-               amount >= selectedPlatform.minimun_deposit && 
-               amount <= selectedPlatform.max_deposit
+        return amount > 0 && selectedPlatform &&
+          amount >= selectedPlatform.minimun_deposit &&
+          amount <= selectedPlatform.max_deposit
       default:
         return false
     }
@@ -266,6 +266,7 @@ export default function DepositPage() {
             selectedPlatform={selectedPlatform}
             onSelect={setSelectedPlatform}
             onNext={handleNext}
+            type="deposit"
           />
         )
       case 2:
@@ -296,12 +297,12 @@ export default function DepositPage() {
           />
         )
       case 5:
-    return (
+        return (
           <AmountStep
             amount={amount}
             setAmount={setAmount}
             withdriwalCode=""
-            setWithdriwalCode={() => {}}
+            setWithdriwalCode={() => { }}
             selectedPlatform={selectedPlatform}
             selectedBetId={selectedBetId}
             selectedNetwork={selectedNetwork}
@@ -339,8 +340,8 @@ export default function DepositPage() {
         </div>
 
         {/* Progress Bar */}
-        <TransactionProgressBar 
-          currentStep={currentStep} 
+        <TransactionProgressBar
+          currentStep={currentStep}
           totalSteps={totalSteps}
           type="deposit"
         />
@@ -451,7 +452,7 @@ export default function DepositPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-              </div>
+      </div>
     </div>
   )
 }
