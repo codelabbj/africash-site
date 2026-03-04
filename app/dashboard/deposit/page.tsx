@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ChevronLeft, Copy, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { TransactionSummaryDialog } from "@/components/transaction/transaction-summary-dialog"
+import type { Transaction } from "@/lib/types"
 import {
   Dialog,
   DialogContent,
@@ -34,6 +36,9 @@ export default function DepositPage() {
   // Step management
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 5
+
+  const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null)
+  const [isTransactionSummaryOpen, setIsTransactionSummaryOpen] = useState(false)
 
   // Form data
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null)
@@ -180,7 +185,7 @@ export default function DepositPage() {
     }
   }
 
-  const handleConfirmTransaction = async () => {
+  /* const handleConfirmTransaction = async () => {
     if (!selectedPlatform || !selectedBetId || !selectedNetwork || !selectedPhone) {
       toast.error("Données manquantes pour la transaction")
       return
@@ -224,6 +229,57 @@ export default function DepositPage() {
       setIsSubmitting(false)
     }
   }
+ */
+
+  const handleConfirmTransaction = async () => {
+  if (!selectedPlatform || !selectedBetId || !selectedNetwork || !selectedPhone) {
+    toast.error("Données manquantes pour la transaction")
+    return
+  }
+
+  setIsSubmitting(true)
+  try {
+    const response = await transactionApi.createDeposit({
+      amount,
+      phone_number: selectedPhone.phone,
+      app: selectedPlatform.id,
+      user_app_id: selectedBetId.user_app_id,
+      network: selectedNetwork.id,
+      source: "web"
+    })
+
+    // Fermer confirmation
+    setIsConfirmationOpen(false)
+
+    // Récupérer dernière transaction
+    try {
+      const lastTrans = await transactionApi.getLastTransaction()
+      setLastTransaction(lastTrans)
+      setIsTransactionSummaryOpen(true)
+    } catch (error) {
+      console.error("Erreur getLastTransaction:", error)
+      
+      // Flux normal si erreur
+      if (selectedNetwork.payment_by_link || response.transaction_link) {
+        setTransactionLink(response.transaction_link)
+        setIsTransactionLinkModalOpen(true)
+      } else {
+        const handled = await handleUssdFlow(amount, selectedNetwork.payment_by_link)
+        if (!handled) router.push("/dashboard")
+      }
+    }
+  } catch (error: any) {
+    const timeErrorMessage = extractTimeErrorMessage(error)
+    if (timeErrorMessage) {
+      toast.error(timeErrorMessage)
+    } else {
+      toast.error("Erreur lors de la création du dépôt")
+    }
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
 
   const handleContinueTransaction = async () => {
     if (transactionLink) {
@@ -238,6 +294,31 @@ export default function DepositPage() {
       }
     }
   }
+
+  const handleCancelTransaction = async (reference: string) => {
+  await transactionApi.cancelTransaction(reference)
+  setTimeout(() => {
+    router.push("/dashboard")
+  }, 1000)
+}
+
+const handleFinalizeTransaction = async (reference: string) => {
+  try {
+    const finalizedTransaction = await transactionApi.finalizeTransaction(reference)
+    
+    setIsTransactionSummaryOpen(false)
+    
+    if (selectedNetwork?.payment_by_link || finalizedTransaction.transaction_link) {
+      setTransactionLink(finalizedTransaction.transaction_link)
+      setIsTransactionLinkModalOpen(true)
+    } else {
+      const handled = await handleUssdFlow(amount, selectedNetwork?.payment_by_link)
+      if (!handled) router.push("/dashboard")
+    }
+  } catch (error) {
+    throw error
+  }
+}
 
   const isStepValid = () => {
     switch (currentStep) {
@@ -347,7 +428,7 @@ export default function DepositPage() {
         />
 
         {/* Current Step */}
-        <div className="min-h-[280px] sm:min-h-[320px] lg:min-h-[400px] overflow-x-hidden">
+        <div className="min-h-70 sm:min-h-80 lg:min-h-100 overflow-x-hidden">
           {renderCurrentStep()}
         </div>
 
@@ -452,6 +533,15 @@ export default function DepositPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        {/* Transaction Summary Dialog */}
+        <TransactionSummaryDialog
+          isOpen={isTransactionSummaryOpen}
+          onClose={() => setIsTransactionSummaryOpen(false)}
+          transaction={lastTransaction}
+          onCancel={handleCancelTransaction}
+          onFinalize={handleFinalizeTransaction}
+          isLoading={isSubmitting}
+        />
       </div>
     </div>
   )
