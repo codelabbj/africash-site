@@ -7,10 +7,10 @@ import type { Transaction } from "@/lib/types"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,6 +24,16 @@ interface TransactionSummaryDialogProps {
   onCancel: (reference: string) => Promise<void>
   onFinalize: (reference: string) => Promise<void>
   isLoading?: boolean
+  /**
+   * "pending" → affiché au chargement quand un dépôt précédent est en attente.
+   *   - Boutons : "Nouveau dépôt" (annule l'ancien) | "Finaliser"
+   *   - Non fermable (Escape, clic extérieur, X bloqués)
+   *
+   * "created" → affiché après création (non utilisé ici mais conservé pour compatibilité).
+   *   - Boutons : "Annuler" | "Finaliser"
+   *   - Fermable normalement.
+   */
+  mode?: "pending" | "created"
 }
 
 export function TransactionSummaryDialog({
@@ -32,29 +42,37 @@ export function TransactionSummaryDialog({
   transaction,
   onCancel,
   onFinalize,
-  isLoading = false
+  isLoading = false,
+  mode = "created",
 }: TransactionSummaryDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [actionType, setActionType] = useState<"cancel" | "finalize" | null>(null)
 
   if (!transaction) return null
 
-  const handleCancel = async () => {
+  const isPendingMode = mode === "pending"
+
+  const handleOpenChange = (open: boolean) => {
+    if (isPendingMode) return // bloque la fermeture
+    if (!open) onClose()
+  }
+
+  // ── "Nouveau dépôt" (mode pending) ────────────────────────────────────────
+  const handleNewDeposit = async () => {
     if (!transaction.reference) {
       toast.error("Référence de transaction manquante")
       return
     }
-
     setActionType("cancel")
     setIsSubmitting(true)
     try {
       await onCancel(transaction.reference)
-      toast.success("Transaction annulée avec succès")
-      onClose()
+      // onCancel gère le toast + fermeture
     } catch (error: any) {
-      const errorMessage = 
-        error.response?.data?.error || 
-        error.response?.data?.detail || 
+      const errorMessage =
+        error?.originalError?.response?.data?.error ||
+        error?.originalError?.response?.data?.detail ||
+        error?.message ||
         "Erreur lors de l'annulation de la transaction"
       toast.error(errorMessage)
     } finally {
@@ -63,12 +81,37 @@ export function TransactionSummaryDialog({
     }
   }
 
+  // ── "Annuler" (mode created) ───────────────────────────────────────────────
+  const handleCancel = async () => {
+    if (!transaction.reference) {
+      toast.error("Référence de transaction manquante")
+      return
+    }
+    setActionType("cancel")
+    setIsSubmitting(true)
+    try {
+      await onCancel(transaction.reference)
+      toast.success("Transaction annulée avec succès")
+      onClose()
+    } catch (error: any) {
+      const errorMessage =
+        error?.originalError?.response?.data?.error ||
+        error?.originalError?.response?.data?.detail ||
+        error?.message ||
+        "Erreur lors de l'annulation de la transaction"
+      toast.error(errorMessage)
+    } finally {
+      setIsSubmitting(false)
+      setActionType(null)
+    }
+  }
+
+  // ── "Finaliser" (les deux modes) ──────────────────────────────────────────
   const handleFinalize = async () => {
     if (!transaction.reference) {
       toast.error("Référence de transaction manquante")
       return
     }
-
     setActionType("finalize")
     setIsSubmitting(true)
     try {
@@ -76,9 +119,10 @@ export function TransactionSummaryDialog({
       toast.success("Transaction finalisée avec succès")
       onClose()
     } catch (error: any) {
-      const errorMessage = 
-        error.response?.data?.error || 
-        error.response?.data?.detail || 
+      const errorMessage =
+        error?.originalError?.response?.data?.error ||
+        error?.originalError?.response?.data?.detail ||
+        error?.message ||
         "Erreur lors de la finalisation de la transaction"
       toast.error(errorMessage)
     } finally {
@@ -96,6 +140,7 @@ export function TransactionSummaryDialog({
       case "reject":
         return <Badge variant="destructive">Rejetée</Badge>
       case "cancel":
+      case "annuler": // ✅ l'API retourne parfois "annuler" en français
         return <Badge variant="outline" className="bg-gray-100 text-gray-800">Annulée</Badge>
       case "timeout":
         return <Badge variant="outline" className="bg-red-100 text-red-800">Expirée</Badge>
@@ -105,48 +150,52 @@ export function TransactionSummaryDialog({
   }
 
   const getTypeBadge = (type: string) => {
-    return type === "deposit" 
-      ? <Badge variant="default">Dépôt</Badge> 
+    return type === "deposit"
+      ? <Badge variant="default">Dépôt</Badge>
       : <Badge variant="secondary">Retrait</Badge>
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent
+        className="sm:max-w-md max-h-[90vh] overflow-y-auto"
+        onEscapeKeyDown={(e) => { if (isPendingMode) e.preventDefault() }}
+        onPointerDownOutside={(e) => { if (isPendingMode) e.preventDefault() }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-blue-600" />
-            Récapitulatif de la transaction
+            {isPendingMode ? "Transaction en attente" : "Récapitulatif de la transaction"}
           </DialogTitle>
           <DialogDescription>
-            Votre transaction a été créée. Vous pouvez la finaliser ou l&apos;annuler.
+            {isPendingMode
+              ? "Vous avez un dépôt en attente. Finalisez-le ou créez un nouveau dépôt."
+              : "Votre transaction a été créée. Vous pouvez la finaliser ou l'annuler."}
           </DialogDescription>
         </DialogHeader>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">
-              Détails de la transaction
-            </CardTitle>
+            <CardTitle className="text-lg">Détails de la transaction</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Type</span>
               {getTypeBadge(transaction.type_trans)}
             </div>
-            
+
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Statut</span>
               {getStatusBadge(transaction.status)}
             </div>
-            
+
             <Separator />
-            
+
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Référence</span>
               <span className="font-medium text-xs sm:text-sm break-all">{transaction.reference}</span>
             </div>
-            
+
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Montant</span>
               <span className="font-semibold">
@@ -157,7 +206,7 @@ export function TransactionSummaryDialog({
                 })}
               </span>
             </div>
-            
+
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Numéro de téléphone</span>
               <span className="font-medium">{transaction.phone_number}</span>
@@ -196,35 +245,61 @@ export function TransactionSummaryDialog({
         </Card>
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button 
-            variant="outline" 
-            onClick={handleCancel} 
-            disabled={isSubmitting || isLoading || transaction.status !== "pending"}
-            className="min-w-25"
-          >
-            {isSubmitting && actionType === "cancel" ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Annulation...
-              </>
-            ) : (
-              "Annuler"
-            )}
-          </Button>
-          <Button 
-            onClick={handleFinalize} 
-            disabled={isSubmitting || isLoading || transaction.status !== "pending"}
-            className="min-w-25"
-          >
-            {isSubmitting && actionType === "finalize" ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Finalisation...
-              </>
-            ) : (
-              "Finaliser"
-            )}
-          </Button>
+          {isPendingMode ? (
+            // ── Mode pending : "Nouveau dépôt" | "Finaliser" ─────────────────
+            <>
+              <Button
+                variant="outline"
+                onClick={handleNewDeposit}
+                disabled={isSubmitting || isLoading || transaction.status !== "pending"}
+                className="min-w-25"
+              >
+                {isSubmitting && actionType === "cancel" ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Annulation...</>
+                ) : (
+                  "Nouveau dépôt"
+                )}
+              </Button>
+              <Button
+                onClick={handleFinalize}
+                disabled={isSubmitting || isLoading || transaction.status !== "pending"}
+                className="min-w-25"
+              >
+                {isSubmitting && actionType === "finalize" ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Finalisation...</>
+                ) : (
+                  "Finaliser"
+                )}
+              </Button>
+            </>
+          ) : (
+            // ── Mode created : "Annuler" | "Finaliser" ────────────────────────
+            <>
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isSubmitting || isLoading || transaction.status !== "pending"}
+                className="min-w-25"
+              >
+                {isSubmitting && actionType === "cancel" ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Annulation...</>
+                ) : (
+                  "Annuler"
+                )}
+              </Button>
+              <Button
+                onClick={handleFinalize}
+                disabled={isSubmitting || isLoading || transaction.status !== "pending"}
+                className="min-w-25"
+              >
+                {isSubmitting && actionType === "finalize" ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Finalisation...</>
+                ) : (
+                  "Finaliser"
+                )}
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
